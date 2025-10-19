@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局排版与颜色基础 */
+:root {
+  --brand: #2563EB;
+  --select: #FEF3C7;
+  --text-main: #1F2937;
+  --text-secondary: #6B7280;
+  --border-light: #E5E7EB;
+  --divider: #D1D5DB;
+  --paper: #FFFEF9;
+}
+
+html, body {
+  @apply bg-white text-textMain;
+}
+
+/* TipTap 内容区样式（舒适排版） */
+.editor-content.ProseMirror {
+  caret-color: var(--brand);
+  outline: none; /* 去除聚焦黑线 */
+}
+
+/* 段落间距：1.5em */
+.editor-content.ProseMirror p {
+  margin: 1.5em 0;
+}
+
+/* 列表样式 */
+.editor-content.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin: 1.2em 0;
+}
+.editor-content.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin: 1.2em 0;
+}
+.editor-content.ProseMirror li {
+  margin: 0.4em 0;
+}
+
+/* 标题层次 */
+.editor-content.ProseMirror h1 {
+  font-size: 2rem; /* 32px */
+  line-height: 1.25;
+  font-weight: 800;
+  margin: 1.2em 0 0.6em;
+}
+.editor-content.ProseMirror h2 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 1.2em 0 0.6em;
+}
+.editor-content.ProseMirror h3 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 1.1em 0 0.6em;
+}
+
+/* 引用样式 */
+.editor-content.ProseMirror blockquote {
+  border-left: 3px solid var(--divider);
+  padding-left: 1em;
+  color: var(--text-secondary);
+  margin: 1.2em 0;
+}
+
+/* 选中文本背景 */
+.editor-content.ProseMirror ::selection {
+  background: var(--select);
+}
+
+/* 占位符样式（tiptap placeholder） */
+.editor-content.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: #9CA3AF; /* 占位文字颜色 */
+  pointer-events: none;
+}
+
+/* 过渡基础 */
+button, .editor-content.ProseMirror {
+  transition: all 0.2s ease;
+}
+
+/* 两行省略：用于卡片问题主体的紧凑展示 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 追加：react-split-pane 基础样式（分割条） */
+.SplitPane { position: relative !important; }
+.Resizer { background: transparent; z-index: 10; box-sizing: border-box; }
+.Resizer.vertical { width: 8px; cursor: col-resize; }
+.Resizer.horizontal { height: 8px; cursor: row-resize; }
+.Resizer:hover { background: rgba(15, 23, 42, 0.08); }
+
+
