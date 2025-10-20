@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useKnowledgeGraph } from '../hooks/useKnowledgeGraph.js';
 import { RELATION_LABEL_ZH } from '../kg/kgSchema.js';
-import { ZoomIn, ZoomOut, Maximize2, RefreshCw, Network } from 'lucide-react';
-import { Button } from './ui';
-import EmptyState from './ui/EmptyState.jsx';
+import { ZoomIn, ZoomOut, Maximize2, RefreshCw } from 'lucide-react';
 
 export default function KnowledgeGraphPanel() {
   const ref = useRef(null);
@@ -74,81 +72,54 @@ export default function KnowledgeGraphPanel() {
     };
   }, [graph]);
 
-  const hasNodes = graph.nodes.length > 0;
-
   return (
-    <div className="relative flex-1">
-      {/* 顶部悬浮工具条：使用 Tailwind classes 替代 inline style */}
-      <div className="absolute top-3 left-6 right-6 flex items-center justify-between pointer-events-none z-10">
-        <h2 className="text-base font-semibold text-text-primary pointer-events-none">知识图谱</h2>
-        <div className="flex items-center gap-1.5 pointer-events-auto">
-          <Button
-            variant="ghost"
-            size="sm"
-            title="重布局"
-            onClick={() => {
-              try {
-                const cy = cyRef.current; if (!cy) return;
-                cy.layout({ name: 'cose', nodeRepulsion: 8000, nodeOverlap: 20, idealEdgeLength: 100, animate: false }).run();
-                cy.fit(undefined, 20);
-              } catch(_) {}
-            }}
-          >
-            <RefreshCw size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            title="缩小"
-            onClick={() => {
-              try {
-                const cy = cyRef.current; if (!cy) return;
-                cy.zoom({ level: cy.zoom() / 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
-              } catch(_) {}
-            }}
-          >
-            <ZoomOut size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            title="放大"
-            onClick={() => {
-              try {
-                const cy = cyRef.current; if (!cy) return;
-                cy.zoom({ level: cy.zoom() * 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
-              } catch(_) {}
-            }}
-          >
-            <ZoomIn size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            title="居中"
-            onClick={() => { try { cyRef.current?.fit(undefined, 20); } catch(_) {} }}
-          >
-            <Maximize2 size={16} />
-          </Button>
+    <div className="h-full" style={{ position:'relative', height:'100%' }}>
+      {/* 顶部悬浮工具条：不占用纵向空间，仅覆盖少量上边缘区域 */}
+      <div
+        style={{ position:'absolute', top:12, left:24, right:24, display:'flex', alignItems:'center', justifyContent:'space-between', pointerEvents:'none' }}
+      >
+        <h2 className="text-base font-semibold text-textMain" style={{ pointerEvents:'none' }}>知识图谱</h2>
+        <div className="inline-flex items-center gap-1.5" style={{ pointerEvents:'auto' }}>
+          <GhostBtn title="重布局" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.layout({ name: 'cose', nodeRepulsion: 8000, nodeOverlap: 20, idealEdgeLength: 100, animate: false }).run();
+              cy.fit(undefined, 20);
+            } catch(_) {}
+          }}><RefreshCw size={16} /></GhostBtn>
+          <GhostBtn title="缩小" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.zoom({ level: cy.zoom() / 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
+            } catch(_) {}
+          }}><ZoomOut size={16} /></GhostBtn>
+          <GhostBtn title="放大" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.zoom({ level: cy.zoom() * 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
+            } catch(_) {}
+          }}><ZoomIn size={16} /></GhostBtn>
+          <GhostBtn title="居中" onClick={() => { try { cyRef.current?.fit(undefined, 20); } catch(_) {} }}><Maximize2 size={16} /></GhostBtn>
         </div>
       </div>
 
-      {/* 空状态：无节点时显示 */}
-      {!hasNodes && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <EmptyState
-            icon={Network}
-            title="暂无知识图谱"
-            description="完成一个 H2 章节（≥200 字）后，AI 将自动提取概念关系"
-          />
-        </div>
-      )}
-
-      {/* Cytoscape 容器：只在有节点时渲染，避免 z-index 冲突 */}
-      {hasNodes && (
-        <div ref={ref} className="absolute inset-0 min-h-0" />
-      )}
+      {/* Cytoscape 容器：绝对填充，获得最大可用空间 */}
+      <div ref={ref} style={{ position:'absolute', inset:0, minHeight:0 }} />
     </div>
+  );
+}
+
+function GhostBtn({ title, onClick, children }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      aria-label={title}
+      onClick={onClick}
+      className="h-8 px-2 inline-flex items-center justify-center rounded-md text-[#475569] hover:text-[#1f2937] bg-white/60 hover:bg-white border border-borderLight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563EB]"
+    >
+      {children}
+    </button>
   );
 }
 

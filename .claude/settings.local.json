@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm outdated:*)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat(design): major UI/UX upgrade - Tailwind 4 + Design System + Performance\n\n## 重大变更\n\n### 🎨 设计系统升级\n- 升级 Tailwind CSS 3.4 → 4.1.14（CSS-first 配置）\n- 删除旧的 tailwind.config.js，迁移到 @theme 指令\n- 建立完整设计 Token 系统（颜色/间距/圆角/阴影/字体/动画）\n- 新增 AI 状态色系统（ready/thinking/dormant/error）\n\n### 🧩 基础组件库\n- 创建 src/components/ui/ 组件库\n- Button: 4 种变体 × 3 种尺寸\n- Card: 卡片容器 + Header/Title/Content 子组件\n- Badge: 状态标签（支持 AI 状态）\n- Skeleton: 加载骨架屏\n- AIThinking: AI 思考中动画（三个跳动圆点）\n- EmptyState: 空状态提示\n\n### ⚡ 性能优化\n- TipTap: 添加 shouldRerenderOnTransaction: false（2025 最佳实践）\n- 预期性能提升：大文档编辑延迟减少约 50%\n\n### 🎯 样式重构\n- Editor 组件：移除所有硬编码颜色/尺寸，改用设计 Token\n- 工具栏：毛玻璃效果改用 Tailwind utilities（backdrop-blur-xl）\n- 统一圆角/阴影/过渡时长使用 CSS 变量\n\n### 📦 依赖更新\n- tailwindcss: 3.4.18 → 4.1.14\n- postcss: 8.4.47 → 8.5.6\n- autoprefixer: 10.4.20 → 10.4.21\n- 新增: motion@12.23.24（Framer Motion 新版本）\n\n## Breaking Changes\n\n⚠️ Tailwind 配置迁移到 CSS @theme，旧的 JS 配置文件已删除\n⚠️ 部分颜色类名变更（如 textMain → text-primary）\n\n## 设计原则\n\n本次升级遵循以下设计原则：\n- 对比（Contrast）：视觉层次清晰\n- 重复（Repetition）：组件样式一致\n- 对齐（Alignment）：统一对齐规则\n- 亲密性（Proximity）：相关内容分组\n- 留白（White Space）：适当间距\n- 层次（Hierarchy）：信息结构清晰\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git tag:*)",
+      "Bash(git commit:*)",
+      "Bash(git stash:*)",
+      "Bash(git checkout:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
