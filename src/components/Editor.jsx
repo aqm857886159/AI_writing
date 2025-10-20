@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Collaboration from '@tiptap/extension-collaboration';
@@ -16,6 +16,7 @@ import {
   Quote
 } from 'lucide-react';
 import clsx from 'clsx';
+import { pushQuote } from '../services/ToolboxBus.js';
 
 const ToolbarButton = ({ onClick, active, disabled, title, children }) => (
   <button
@@ -178,6 +179,23 @@ export default function Editor() {
       <div className="bg-paper rounded-xl border border-borderLight shadow-editor transition-shadow duration-200 ease-out hover:shadow-lg">
         {/* 固定高度的内部滚动容器，初始渲染即不扩展外层 */}
         <div className="relative h-[64vh] overflow-y-auto">
+          {editor && (
+            <BubbleMenu editor={editor} tippyOptions={{ duration: 120 }}>
+              <button
+                type="button"
+                className="h-8 px-2 text-xs rounded border border-borderLight bg-white/90 hover:bg-white"
+                onClick={() => {
+                  try {
+                    const { from, to } = editor.state.selection;
+                    const text = from < to ? editor.state.doc.textBetween(from, to, '\n') : '';
+                    pushQuote(text);
+                  } catch (_) {}
+                }}
+              >
+                引用
+              </button>
+            </BubbleMenu>
+          )}
           <EditorContent editor={editor} />
           {/* 底部 sticky 的计数条：不遮挡内容，随滚动容器永远贴底 */}
           <div className="sticky bottom-0 flex justify-end">
