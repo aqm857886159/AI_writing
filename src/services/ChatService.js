@@ -1,7 +1,8 @@
 // 通用对话服务：引用优先 + 最近窗口消息 + 本次指令
 // 对标：LobeChat / Open WebUI / ChatGPT-Next-Web
 
-import { askChat } from './ChatAdapter.js';
+import { routeLLM } from './ModelRouter.js';
+import { llmCall } from './LLMAdapter.js';
 
 export async function chatRequest({ system, quotes = [], history = [], input = '' }) {
   const sys = (system || [
@@ -21,7 +22,8 @@ export async function chatRequest({ system, quotes = [], history = [], input = '
   ].filter(Boolean);
 
   try {
-    return await askChat(messages, { temperature: 0.25, max_tokens: 900, top_p: 0.9 });
+    const plan = routeLLM({ kind: 'chat', inputLen: (joinedQuotes.length + (input||'').length), needStreaming: false });
+    return await llmCall({ ...plan, messages });
   } catch (e) {
     return `（调用失败）${e.message || e}`;
   }

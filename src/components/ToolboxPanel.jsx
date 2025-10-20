@@ -2,6 +2,8 @@ import React from 'react';
 import { onQuotes, clearQuotes } from '../services/ToolboxBus.js';
 import { chatRequest } from '../services/ChatService.js';
 import { onMessages, addMessage, getRecent } from '../services/ChatStore.js';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function ToolboxPanel() {
   const [quotes, setQuotes] = React.useState([]);
@@ -76,7 +78,9 @@ function MessageItem({ role, content }) {
   };
   return (
     <div ref={ref} className={role === 'ai' ? 'bg-white border border-borderLight rounded p-2' : 'text-textSecondary'}>
-      <div style={{ whiteSpace: 'pre-wrap' }}>{content}</div>
+      <ReactMarkdown className="markdown-body text-[14px] leading-6" remarkPlugins={[remarkGfm]} linkTarget="_blank">
+        {content || ''}
+      </ReactMarkdown>
       {role === 'ai' && (
         <div className="mt-1 text-right">
           <button className="text-xs text-[#64748b] hover:underline" onClick={copy}>复制</button>

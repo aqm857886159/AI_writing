@@ -3,6 +3,8 @@
 
 import { detectSections } from './SectionDetector.js';
 import { deepseekAvailable, askDeepseekV3 } from './DeepseekAdapter.js';
+import { routeLLM } from './ModelRouter.js';
+import { llmCall } from './LLMAdapter.js';
 
 const CRITIC_KEY = 'critic:v0';
 // 触发阈值（按原设计：字数≥200，空闲≥20s）
@@ -96,8 +98,17 @@ async function runScheduler() {
     let aiOut = [];
     if (deepseekAvailable()) {
       try {
-        const v3 = (await askDeepseekV3(sec.text)).map(x => ({ ...x, source: 'ai' }));
-        aiOut = aiOut.concat(v3);
+        const plan = routeLLM({ kind: 'critic_qwhy', inputLen: sec.text.length });
+        const system = [
+          '你是苏格拉底式审稿人。只提出问题与“为什么问”，不提供答案或改写。',
+          '请严格使用以下轻格式输出，最多 1–3 组：',
+          'Q: [问题]',
+          'Why: [为什么问，1–2 句话]'
+        ].join('\n');
+        const user = `请基于下文生成 1–3 组 Q/Why（保持原文语言）：\n"""${sec.text.slice(0, 3500)}"""`;
+        const text = await llmCall({ ...plan, messages: [ { role:'system', content: system }, { role:'user', content: user } ] });
+        const items = parseQWhy(text).map(x => ({ ...x, source: 'ai' }));
+        aiOut = aiOut.concat(items);
       } catch (_) {}
     }
     const merged = [...aiOut];
@@ -130,4 +141,20 @@ export function subscribeSections(listener) {
   return () => subscribers.delete(listener);
 }
 
-
+function parseQWhy(s) {
+  if (!s) return [];
+  const lines = String(s).split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const qm = /^Q:\s*(.+)$/i.exec(lines[i]);
+    if (!qm) continue;
+    let why = '';
+    for (let j = i + 1; j < Math.min(lines.length, i + 6); j++) {
+      const wm = /^Why:\s*(.+)$/i.exec(lines[j]);
+      if (wm) { why = wm[1].trim(); break; }
+      if (/^Q:\s*/i.test(lines[j])) break;
+    }
+    out.push({ id: `ds_${out.length}_${Math.random().toString(36).slice(2,8)}`, type: 'conceptual', severity: 'med', confidence: 0.6, question: /[?？]$/.test(qm[1]) ? qm[1] : `${qm[1]}?`, why });
+  }
+  return out;
+}

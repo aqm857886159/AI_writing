@@ -113,4 +113,16 @@ button, .editor-content.ProseMirror {
 .Resizer.horizontal { height: 8px; cursor: row-resize; }
 .Resizer:hover { background: rgba(15, 23, 42, 0.08); }
 
+/* Markdown 渲染基础样式 */
+.markdown-body h1 { font-size: 1.5rem; font-weight: 800; margin: 0.8em 0 0.4em; }
+.markdown-body h2 { font-size: 1.25rem; font-weight: 700; margin: 0.8em 0 0.4em; }
+.markdown-body h3 { font-size: 1.1rem; font-weight: 700; margin: 0.7em 0 0.3em; }
+.markdown-body p { margin: 0.6em 0; }
+.markdown-body ul, .markdown-body ol { padding-left: 1.2em; margin: 0.6em 0; }
+.markdown-body li { margin: 0.25em 0; }
+.markdown-body hr { border: none; border-top: 1px solid var(--divider); margin: 12px 0; }
+.markdown-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
+.markdown-body pre { background: #f8fafc; border: 1px solid var(--border-light); border-radius: 6px; padding: 8px; overflow: auto; margin: 8px 0; }
+.markdown-body pre code { background: transparent; padding: 0; }
+
 
