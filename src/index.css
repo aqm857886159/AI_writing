@@ -23,6 +23,14 @@ html, body {
   outline: none; /* 去除聚焦黑线 */
 }
 
+/* 焦点环按需开启：如需可见焦点，请恢复以下样式 */
+/*
+.editor-content.ProseMirror:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+*/
+
 /* 段落间距：1.5em */
 .editor-content.ProseMirror p {
   margin: 1.5em 0;

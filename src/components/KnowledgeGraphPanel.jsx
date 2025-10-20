@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useKnowledgeGraph } from '../hooks/useKnowledgeGraph.js';
 import { RELATION_LABEL_ZH } from '../kg/kgSchema.js';
+import { ZoomIn, ZoomOut, Maximize2, RefreshCw } from 'lucide-react';
 
 export default function KnowledgeGraphPanel() {
   const ref = useRef(null);
+  const cyRef = useRef(null);
   const graph = useKnowledgeGraph();
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function KnowledgeGraphPanel() {
         ],
         layout: { name: 'cose', nodeRepulsion: 8000, nodeOverlap: 20, idealEdgeLength: 100, animate: false }
       });
+      cyRef.current = cy;
       const t1 = performance.now();
       try { const mod = await import('../diag/logger.js'); mod.diag.emit({ type: 'kg.layout.ms', ms: Math.round(t1 - t0), nodes: graph.nodes.length, edges: graph.edges.length }); } catch (_) {}
       try { cy.fit(undefined, 20); } catch(_) {}
@@ -65,15 +68,58 @@ export default function KnowledgeGraphPanel() {
       disposed = true;
       if (ro) { try { ro.disconnect(); } catch(_) {} }
       if (cy) { try { cy.destroy(); } catch (_) {} }
+      cyRef.current = null;
     };
   }, [graph]);
 
   return (
-    <div className="px-6 py-6" style={{ display:'flex', flexDirection:'column', height:'100%' }}>
-      <h2 className="text-base font-semibold text-textMain mb-2">知识图谱</h2>
-      <p className="text-sm text-textSecondary mb-3">（按章节增量合并，Top-K 过滤、强度阈值裁剪）</p>
-      <div ref={ref} style={{ flex:1, minHeight:0 }} />
+    <div className="h-full" style={{ position:'relative', height:'100%' }}>
+      {/* 顶部悬浮工具条：不占用纵向空间，仅覆盖少量上边缘区域 */}
+      <div
+        style={{ position:'absolute', top:12, left:24, right:24, display:'flex', alignItems:'center', justifyContent:'space-between', pointerEvents:'none' }}
+      >
+        <h2 className="text-base font-semibold text-textMain" style={{ pointerEvents:'none' }}>知识图谱</h2>
+        <div className="inline-flex items-center gap-1.5" style={{ pointerEvents:'auto' }}>
+          <GhostBtn title="重布局" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.layout({ name: 'cose', nodeRepulsion: 8000, nodeOverlap: 20, idealEdgeLength: 100, animate: false }).run();
+              cy.fit(undefined, 20);
+            } catch(_) {}
+          }}><RefreshCw size={16} /></GhostBtn>
+          <GhostBtn title="缩小" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.zoom({ level: cy.zoom() / 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
+            } catch(_) {}
+          }}><ZoomOut size={16} /></GhostBtn>
+          <GhostBtn title="放大" onClick={() => {
+            try {
+              const cy = cyRef.current; if (!cy) return;
+              cy.zoom({ level: cy.zoom() * 1.15, renderedPosition: { x: cy.width()/2, y: cy.height()/2 } });
+            } catch(_) {}
+          }}><ZoomIn size={16} /></GhostBtn>
+          <GhostBtn title="居中" onClick={() => { try { cyRef.current?.fit(undefined, 20); } catch(_) {} }}><Maximize2 size={16} /></GhostBtn>
+        </div>
+      </div>
+
+      {/* Cytoscape 容器：绝对填充，获得最大可用空间 */}
+      <div ref={ref} style={{ position:'absolute', inset:0, minHeight:0 }} />
     </div>
+  );
+}
+
+function GhostBtn({ title, onClick, children }) {
+  return (
+    <button
+      type="button"
+      title={title}
+      aria-label={title}
+      onClick={onClick}
+      className="h-8 px-2 inline-flex items-center justify-center rounded-md text-[#475569] hover:text-[#1f2937] bg-white/60 hover:bg-white border border-borderLight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563EB]"
+    >
+      {children}
+    </button>
   );
 }
 

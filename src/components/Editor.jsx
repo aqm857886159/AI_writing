@@ -22,13 +22,15 @@ const ToolbarButton = ({ onClick, active, disabled, title, children }) => (
     type="button"
     title={title}
     aria-label={title}
+    aria-pressed={!!active}
     onClick={onClick}
     disabled={disabled}
     className={clsx(
-      'inline-flex items-center justify-center h-9 w-9 rounded-md transition-colors duration-200 ease-out',
-      'text-[#6B7280] hover:text-brand',
+      'inline-flex items-center justify-center h-10 w-10 rounded-md',
+      'text-[#475569] hover:text-[#1f2937]',
       'disabled:opacity-40 disabled:cursor-not-allowed',
-      active && 'text-brand bg-white/60'
+      active ? 'bg-[#E8F0FF] text-[#1d4ed8] ring-1 ring-[#c7d2fe]' : 'bg-transparent',
+      'transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563EB]'
     )}
   >
     {children}
