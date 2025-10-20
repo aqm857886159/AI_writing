@@ -1,37 +1,163 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* 全局排版与颜色基础 */
-:root {
-  --brand: #2563EB;
-  --select: #FEF3C7;
-  --text-main: #1F2937;
-  --text-secondary: #6B7280;
-  --border-light: #E5E7EB;
-  --divider: #D1D5DB;
-  --paper: #FFFEF9;
+/* ============================================
+   Tailwind 4 Design Token System (@theme)
+   ============================================ */
+@theme {
+  /* === 颜色系统 (Colors) === */
+
+  /* 品牌色 */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #2563eb;  /* 主品牌色 */
+  --color-brand-600: #1d4ed8;
+  --color-brand-700: #1e40af;
+  --color-brand-800: #1e3a8a;
+  --color-brand-900: #1e293b;
+
+  /* 表面色 (Surface) */
+  --color-paper: #fffef9;         /* 编辑器背景：温暖的纸张白 */
+  --color-panel: #f9fafb;         /* 侧边栏背景：浅灰 */
+  --color-elevated: #ffffff;      /* 浮动卡片：纯白 */
+
+  /* 文本色 (Text) */
+  --color-text-primary: #1f2937;      /* 主文本：深灰黑 */
+  --color-text-secondary: #6b7280;    /* 次要文本：中灰 */
+  --color-text-tertiary: #9ca3af;     /* 三级文本：浅灰 */
+  --color-text-placeholder: #d1d5db;  /* 占位符：极浅灰 */
+
+  /* 边框与分割线 (Borders) */
+  --color-border-light: #e5e7eb;
+  --color-border-medium: #d1d5db;
+  --color-border-dark: #9ca3af;
+
+  /* AI 状态色 (AI States) */
+  --color-ai-ready: #10b981;        /* 就绪：绿色 */
+  --color-ai-thinking: #f59e0b;     /* 思考中：橙色 */
+  --color-ai-dormant: #6b7280;      /* 休眠：灰色 */
+  --color-ai-error: #ef4444;        /* 错误：红色 */
+
+  /* 选中与高亮 (Selection) */
+  --color-select: #fef3c7;          /* 文本选中背景：浅黄 */
+  --color-highlight: #fef9c3;       /* 高亮：黄色 */
+
+  /* 语义色 (Semantic) */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* === 间距系统 (Spacing) - 基于 4px === */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem;   /* 2px */
+  --spacing-1: 0.25rem;      /* 4px */
+  --spacing-1-5: 0.375rem;   /* 6px */
+  --spacing-2: 0.5rem;       /* 8px */
+  --spacing-2-5: 0.625rem;   /* 10px */
+  --spacing-3: 0.75rem;      /* 12px */
+  --spacing-3-5: 0.875rem;   /* 14px */
+  --spacing-4: 1rem;         /* 16px */
+  --spacing-5: 1.25rem;      /* 20px */
+  --spacing-6: 1.5rem;       /* 24px */
+  --spacing-7: 1.75rem;      /* 28px */
+  --spacing-8: 2rem;         /* 32px */
+  --spacing-10: 2.5rem;      /* 40px */
+  --spacing-12: 3rem;        /* 48px */
+  --spacing-14: 3.5rem;      /* 56px */
+  --spacing-16: 4rem;        /* 64px */
+  --spacing-18: 4.5rem;      /* 72px */
+  --spacing-20: 5rem;        /* 80px */
+  --spacing-24: 6rem;        /* 96px */
+
+  /* === 圆角系统 (Border Radius) === */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;      /* 4px - 标签 */
+  --radius-default: 0.375rem; /* 6px - 按钮 */
+  --radius-md: 0.5rem;       /* 8px - 卡片 */
+  --radius-lg: 0.75rem;      /* 12px - 面板 */
+  --radius-xl: 1rem;         /* 16px - 大容器 */
+  --radius-2xl: 1.5rem;      /* 24px */
+  --radius-full: 9999px;     /* 圆形 */
+
+  /* === 阴影系统 (Box Shadow) === */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --shadow-editor: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* === 字体系统 (Typography) === */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Merriweather", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+
+  /* 字号 */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px - 编辑器正文 */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
+  --font-size-4xl: 2.25rem;     /* 36px */
+
+  /* 字重 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* 行高 */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 1.8;      /* 编辑器正文 */
+
+  /* === 动画系统 (Animation) === */
+  --transition-duration-fast: 150ms;
+  --transition-duration-base: 200ms;
+  --transition-duration-slow: 300ms;
+
+  --transition-timing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-timing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-timing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --transition-timing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* === Z-Index 层级 === */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
 }
 
+/* ============================================
+   全局基础样式
+   ============================================ */
 html, body {
-  @apply bg-white text-textMain;
+  @apply bg-white text-text-primary;
 }
 
-/* TipTap 内容区样式（舒适排版） */
+/* ============================================
+   TipTap 编辑器内容样式
+   ============================================ */
 .editor-content.ProseMirror {
-  caret-color: var(--brand);
-  outline: none; /* 去除聚焦黑线 */
+  caret-color: var(--color-brand-500);
+  outline: none;
 }
 
-/* 焦点环按需开启：如需可见焦点，请恢复以下样式 */
-/*
-.editor-content.ProseMirror:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-*/
-
-/* 段落间距：1.5em */
+/* 段落间距 */
 .editor-content.ProseMirror p {
   margin: 1.5em 0;
 }
@@ -53,52 +179,51 @@ html, body {
 
 /* 标题层次 */
 .editor-content.ProseMirror h1 {
-  font-size: 2rem; /* 32px */
-  line-height: 1.25;
-  font-weight: 800;
+  font-size: 2rem;
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-extrabold);
   margin: 1.2em 0 0.6em;
 }
 .editor-content.ProseMirror h2 {
-  font-size: 1.5rem; /* 24px */
+  font-size: 1.5rem;
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   margin: 1.2em 0 0.6em;
 }
 .editor-content.ProseMirror h3 {
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.25rem;
   line-height: 1.35;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   margin: 1.1em 0 0.6em;
 }
 
 /* 引用样式 */
 .editor-content.ProseMirror blockquote {
-  border-left: 3px solid var(--divider);
+  border-left: 3px solid var(--color-border-medium);
   padding-left: 1em;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   margin: 1.2em 0;
 }
 
 /* 选中文本背景 */
 .editor-content.ProseMirror ::selection {
-  background: var(--select);
+  background: var(--color-select);
 }
 
-/* 占位符样式（tiptap placeholder） */
+/* 占位符样式 */
 .editor-content.ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
   height: 0;
-  color: #9CA3AF; /* 占位文字颜色 */
+  color: var(--color-text-tertiary);
   pointer-events: none;
 }
 
-/* 过渡基础 */
-button, .editor-content.ProseMirror {
-  transition: all 0.2s ease;
-}
+/* ============================================
+   工具类扩展
+   ============================================ */
 
-/* 两行省略：用于卡片问题主体的紧凑展示 */
+/* 两行省略 */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -106,23 +231,92 @@ button, .editor-content.ProseMirror {
   overflow: hidden;
 }
 
-/* 追加：react-split-pane 基础样式（分割条） */
-.SplitPane { position: relative !important; }
-.Resizer { background: transparent; z-index: 10; box-sizing: border-box; }
-.Resizer.vertical { width: 8px; cursor: col-resize; }
-.Resizer.horizontal { height: 8px; cursor: row-resize; }
-.Resizer:hover { background: rgba(15, 23, 42, 0.08); }
+/* ============================================
+   React Resizable Panels 样式
+   ============================================ */
+.SplitPane {
+  position: relative !important;
+}
 
-/* Markdown 渲染基础样式 */
-.markdown-body h1 { font-size: 1.5rem; font-weight: 800; margin: 0.8em 0 0.4em; }
-.markdown-body h2 { font-size: 1.25rem; font-weight: 700; margin: 0.8em 0 0.4em; }
-.markdown-body h3 { font-size: 1.1rem; font-weight: 700; margin: 0.7em 0 0.3em; }
-.markdown-body p { margin: 0.6em 0; }
-.markdown-body ul, .markdown-body ol { padding-left: 1.2em; margin: 0.6em 0; }
-.markdown-body li { margin: 0.25em 0; }
-.markdown-body hr { border: none; border-top: 1px solid var(--divider); margin: 12px 0; }
-.markdown-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
-.markdown-body pre { background: #f8fafc; border: 1px solid var(--border-light); border-radius: 6px; padding: 8px; overflow: auto; margin: 8px 0; }
-.markdown-body pre code { background: transparent; padding: 0; }
+.Resizer {
+  background: transparent;
+  z-index: var(--z-dropdown);
+  box-sizing: border-box;
+}
 
+.Resizer.vertical {
+  width: 8px;
+  cursor: col-resize;
+}
 
+.Resizer.horizontal {
+  height: 8px;
+  cursor: row-resize;
+}
+
+.Resizer:hover {
+  background: rgba(15, 23, 42, 0.08);
+}
+
+/* ============================================
+   Markdown 渲染样式
+   ============================================ */
+.markdown-body h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-extrabold);
+  margin: 0.8em 0 0.4em;
+}
+
+.markdown-body h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0.8em 0 0.4em;
+}
+
+.markdown-body h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0.7em 0 0.3em;
+}
+
+.markdown-body p {
+  margin: 0.6em 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.2em;
+  margin: 0.6em 0;
+}
+
+.markdown-body li {
+  margin: 0.25em 0;
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--color-border-medium);
+  margin: 12px 0;
+}
+
+.markdown-body code {
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.markdown-body pre {
+  background: #f8fafc;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  overflow: auto;
+  margin: var(--spacing-3) 0;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+}

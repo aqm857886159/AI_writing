@@ -27,11 +27,12 @@ const ToolbarButton = ({ onClick, active, disabled, title, children }) => (
     onClick={onClick}
     disabled={disabled}
     className={clsx(
-      'inline-flex items-center justify-center h-10 w-10 rounded-md',
-      'text-[#475569] hover:text-[#1f2937]',
+      'inline-flex items-center justify-center h-10 w-10 rounded-[var(--radius-default)]',
+      'text-text-secondary hover:text-text-primary',
       'disabled:opacity-40 disabled:cursor-not-allowed',
-      active ? 'bg-[#E8F0FF] text-[#1d4ed8] ring-1 ring-[#c7d2fe]' : 'bg-transparent',
-      'transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563EB]'
+      active ? 'bg-brand-50 text-brand-600 ring-1 ring-brand-200' : 'bg-transparent',
+      'transition-colors duration-[var(--transition-duration-fast)]',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500'
     )}
   >
     {children}
@@ -63,13 +64,14 @@ export default function Editor() {
 
   const editor = useEditor({
     extensions,
+    // TipTap 2025 性能优化：禁用每次 transaction 的重渲染
+    shouldRerenderOnTransaction: false,
     editorProps: {
       attributes: {
         class:
-          'editor-content font-serif text-[18px] leading-[1.8] text-textMain ' +
-          'selection:bg-select caret-brand ' +
-          // 扩大可编辑区域：宽度提升至 760px，左右内边距从 80px 降至 64px
-          'max-w-[760px] mx-auto py-[56px] px-[64px] ' +
+          'editor-content font-serif text-lg leading-loose text-text-primary ' +
+          'selection:bg-select caret-brand-500 ' +
+          'max-w-[760px] mx-auto py-14 px-16 ' +
           'transition-colors duration-200 ease-out'
       }
     },
@@ -87,16 +89,8 @@ export default function Editor() {
       className="relative w-[min(860px,calc(100vw-48px))]"
     >
       {/* 工具栏（粘顶，半透明、blur） */}
-      <div className="sticky top-0 z-20 -mt-2 mb-10">
-        <div
-          className="mx-auto max-w-[760px] flex items-center gap-2 rounded-lg px-2 py-1.5"
-          style={{
-            background: 'rgba(255, 255, 255, 0.6)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: '1px solid rgba(209,213,219,0.7)'
-          }}
-        >
+      <div className="sticky top-0 z-[var(--z-sticky)] -mt-2 mb-10">
+        <div className="mx-auto max-w-[760px] flex items-center gap-2 rounded-[var(--radius-lg)] px-2 py-1.5 bg-white/60 backdrop-blur-xl border border-border-light/70">
           {/* 标题组 */}
           <ToolbarButton
             title="H1"
@@ -176,14 +170,14 @@ export default function Editor() {
       </div>
 
       {/* 编辑器卡片（纸张白+阴影+边框） */}
-      <div className="bg-paper rounded-xl border border-borderLight shadow-editor transition-shadow duration-200 ease-out hover:shadow-lg">
+      <div className="bg-paper rounded-[var(--radius-xl)] border border-border-light shadow-[var(--shadow-editor)] transition-shadow duration-[var(--transition-duration-base)] ease-out hover:shadow-[var(--shadow-lg)]">
         {/* 固定高度的内部滚动容器，初始渲染即不扩展外层 */}
         <div className="relative h-[64vh] overflow-y-auto">
           {editor && (
             <BubbleMenu editor={editor} tippyOptions={{ duration: 120 }}>
               <button
                 type="button"
-                className="h-8 px-2 text-xs rounded border border-borderLight bg-white/90 hover:bg-white"
+                className="h-8 px-2 text-xs rounded-[var(--radius-default)] border border-border-light bg-white/90 hover:bg-white transition-colors"
                 onClick={() => {
                   try {
                     const { from, to } = editor.state.selection;
@@ -199,7 +193,7 @@ export default function Editor() {
           <EditorContent editor={editor} />
           {/* 底部 sticky 的计数条：不遮挡内容，随滚动容器永远贴底 */}
           <div className="sticky bottom-0 flex justify-end">
-            <span className="m-2 px-2 py-0.5 text-xs text-textSecondary bg-white/80 backdrop-blur rounded">
+            <span className="m-2 px-2 py-0.5 text-xs text-text-secondary bg-white/80 backdrop-blur rounded-[var(--radius-sm)]">
               {chars} 字
             </span>
           </div>
