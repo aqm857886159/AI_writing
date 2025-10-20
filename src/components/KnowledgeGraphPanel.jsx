@@ -77,7 +77,7 @@ export default function KnowledgeGraphPanel() {
   const hasNodes = graph.nodes.length > 0;
 
   return (
-    <div className="relative h-full">
+    <div className="relative flex-1">
       {/* 顶部悬浮工具条：使用 Tailwind classes 替代 inline style */}
       <div className="absolute top-3 left-6 right-6 flex items-center justify-between pointer-events-none z-10">
         <h2 className="text-base font-semibold text-text-primary pointer-events-none">知识图谱</h2>
@@ -144,8 +144,10 @@ export default function KnowledgeGraphPanel() {
         </div>
       )}
 
-      {/* Cytoscape 容器：绝对填充，获得最大可用空间 */}
-      <div ref={ref} className="absolute inset-0 min-h-0" />
+      {/* Cytoscape 容器：只在有节点时渲染，避免 z-index 冲突 */}
+      {hasNodes && (
+        <div ref={ref} className="absolute inset-0 min-h-0" />
+      )}
     </div>
   );
 }
