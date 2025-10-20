@@ -7,8 +7,8 @@ import { routeLLM } from './ModelRouter.js';
 import { llmCall } from './LLMAdapter.js';
 
 const CRITIC_KEY = 'critic:v0';
-// 触发阈值（按原设计：字数≥200，空闲≥20s）
-const IDLE_MS = 20000;
+// 触发阈值：字数≥200，空闲≥10s（优化后的快速反馈阈值）
+const IDLE_MS = 10000;
 const WORDS_MIN = 200;
 // 已去除规则层与复杂阈值，AI 必调（V3）
 const pendingTimers = new Map();

@@ -69,7 +69,7 @@ export default function Editor() {
     editorProps: {
       attributes: {
         class:
-          'editor-content font-serif text-lg leading-loose text-text-primary ' +
+          'editor-content font-serif text-base leading-relaxed text-text-primary ' +
           'selection:bg-select caret-brand-500 ' +
           'max-w-[760px] mx-auto py-14 px-16 ' +
           'transition-colors duration-200 ease-out'
