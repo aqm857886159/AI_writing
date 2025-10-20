@@ -2,8 +2,7 @@ import React from 'react';
 import { onQuotes, clearQuotes } from '../services/ToolboxBus.js';
 import { chatRequest } from '../services/ChatService.js';
 import { onMessages, addMessage, getRecent } from '../services/ChatStore.js';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+// 动态加载 markdown 依赖，避免在包缺失/预构建异常时拖垮整个应用
 
 export default function ToolboxPanel() {
   const [quotes, setQuotes] = React.useState([]);
@@ -73,14 +72,38 @@ export default function ToolboxPanel() {
 
 function MessageItem({ role, content }) {
   const ref = React.useRef(null);
-  const copy = () => {
-    try { navigator.clipboard.writeText(content || ''); } catch (_) {}
-  };
+  const copy = () => { try { navigator.clipboard.writeText(content || ''); } catch (_) {} };
+  const [mods, setMods] = React.useState(null);
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const [{ default: ReactMarkdown }, { default: remarkGfm }] = await Promise.all([
+          import('react-markdown'),
+          import('remark-gfm')
+        ]);
+        if (alive) setMods({ ReactMarkdown, remarkGfm });
+      } catch (_) {
+        setMods(null);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+
   return (
     <div ref={ref} className={role === 'ai' ? 'bg-white border border-borderLight rounded p-2' : 'text-textSecondary'}>
-      <ReactMarkdown className="markdown-body text-[14px] leading-6" remarkPlugins={[remarkGfm]} linkTarget="_blank">
-        {content || ''}
-      </ReactMarkdown>
+      {mods ? (
+        <div className="markdown-body text-[14px] leading-6">
+          <mods.ReactMarkdown
+            remarkPlugins={[mods.remarkGfm]}
+            components={{ a: (p) => <a {...p} target="_blank" rel="noreferrer" /> }}
+          >
+            {content || ''}
+          </mods.ReactMarkdown>
+        </div>
+      ) : (
+        <div style={{ whiteSpace: 'pre-wrap' }}>{content}</div>
+      )}
       {role === 'ai' && (
         <div className="mt-1 text-right">
           <button className="text-xs text-[#64748b] hover:underline" onClick={copy}>复制</button>
